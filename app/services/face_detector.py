@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 from typing import List, Tuple
 
@@ -7,11 +7,9 @@ import mediapipe as mp
 import numpy as np
 
 
-mp_face_mesh = mp.solutions.face_mesh
-
-
 def extract_face_landmarks(image: np.ndarray) -> List[Tuple[int, int]] | None:
     image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    mp_face_mesh = mp.solutions.face_mesh
 
     with mp_face_mesh.FaceMesh(
         static_image_mode=True,
