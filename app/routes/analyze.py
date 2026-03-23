@@ -7,7 +7,6 @@ from fastapi.responses import JSONResponse
 
 from app.core.config import settings
 from app.services.analysis_engine import AnalysisError, analyze_skin_image
-from app.services.condition_classifier import ClassifierError, classify_skin_condition
 from app.utils.image_utils import ImageValidationError, decode_image, maybe_save_debug_image, validate_image_upload
 
 
@@ -54,33 +53,4 @@ async def analyze_skin(
         return JSONResponse(status_code=400, content={"error": str(exc)})
     except Exception:
         logger.exception("Unexpected analysis failure")
-        return JSONResponse(status_code=500, content={"error": "Internal server error"})
-
-
-@router.post("/v1/skin-condition-classify")
-async def classify_skin(
-    file: UploadFile = File(...),
-    x_ai_api_key: str | None = Header(default=None),
-):
-    auth_error = _verify_api_key(x_ai_api_key)
-    if auth_error:
-        return auth_error
-
-    try:
-        payload = await file.read()
-        validate_image_upload(file.content_type, payload, settings.max_upload_mb)
-        image = decode_image(payload)
-
-        result = classify_skin_condition(image)
-        return {
-            "message": "Classification successful",
-            "classifier": result,
-        }
-
-    except ImageValidationError as exc:
-        return JSONResponse(status_code=400, content={"error": str(exc)})
-    except ClassifierError as exc:
-        return JSONResponse(status_code=500, content={"error": str(exc)})
-    except Exception:
-        logger.exception("Unexpected classifier failure")
         return JSONResponse(status_code=500, content={"error": "Internal server error"})

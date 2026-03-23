@@ -21,22 +21,10 @@ class Settings:
         ]
     )
 
-    # Skin condition classifier settings
-    classifier_model_path: str = os.getenv(
-        "CLASSIFIER_MODEL_PATH",
-        r"C:\Users\ARYA\Downloads\skin_ai_model\models\skin_disease_model.keras",
-    )
-    classifier_img_size: int = int(os.getenv("CLASSIFIER_IMG_SIZE", "224"))
-    classifier_conf_threshold: float = float(os.getenv("CLASSIFIER_CONF_THRESHOLD", "0.60"))
-    classifier_unknown_label: str = os.getenv("CLASSIFIER_UNKNOWN_LABEL", "uncertain")
-
-    classifier_labels: list[str] = field(
-        default_factory=lambda: json.loads(
-            os.getenv(
-                "CLASSIFIER_LABELS_JSON",
-                '["acne","eczema","fungal","normal","psoriasis","vitiligo"]',
-            )
-        )
+    # Retained only as metadata for the analysis service.
+    labels_json: str = os.getenv(
+        "LABELS_JSON",
+        json.dumps(["redness", "acne", "texture", "oiliness"]),
     )
 
 
