@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: skin-ai
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: CORS_ORIGINS
+        value: http://localhost:3000
+      - key: MAX_UPLOAD_MB
+        value: 8
